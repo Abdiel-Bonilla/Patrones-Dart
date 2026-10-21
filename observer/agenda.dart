@@ -1,22 +1,23 @@
-import 'notificador.dart';
-import 'panel-alumno.dart';
+import 'observador.dart';
 
 class Agenda {
-  final PanelAlumno panel = PanelAlumno();
-  final Notificador notificador = Notificador();
+  final List<Observador> _observadores = [];
 
-  void publicarTarea(String tarea) {
-    print ('Publicando: $tarea');
-
-    panel.mostrar(tarea);
-    notificador.notificar(tarea);
-
-
-
-    //Aqui la agenda se ocupa de tres tareas
-    //Viola el principio de division de responsabilidades
-    //La agenda se encarga de publcar tareas como de cordinar con la UI
-    //y las notoficaciones
+  void suscribir(Observador observador) {
+    _observadores.add(observador);
   }
 
+  void desuscribir (Observador observador) {
+    _observadores.remove(observador);
+  }
+
+  void publicarTarea(String tarea) {
+    print('Publicando: $tarea');
+
+    for (final observador in _observadores) {
+      observador.actualizar(tarea);
+    }
+
+    //Aqui la agenda se ocupa de crear observadores
+  }
 }
